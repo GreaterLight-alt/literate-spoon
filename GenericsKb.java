@@ -65,7 +65,6 @@ public static GenericsKb[] loadFromFile(String filename) throws FileNotFoundExce
          String statement = parts[1];
          double confidenceScore = Double.parseDouble(parts[2]);
 
-
       
       kbArray[index++] = new GenericsKb(term, statement, confidenceScore);
       currentSize++; //Increment current size

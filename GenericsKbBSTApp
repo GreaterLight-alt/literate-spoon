@@ -1,0 +1,52 @@
+import java.io.IOException;
+import java.util.Scanner;
+public class GenericsKbBSTApp{
+   public static void main String(String[] args) {
+    Scanner sc = new Scanner(System.in);
+    GenericsKbBST knowledgeBase = new GenericsKbBST();
+    boolean running = true;
+    while (running){
+        displayMenu();
+        int choice = getUserChoice(scanner);
+        switch(choice){
+            case 1:
+            loadFromFile(scanner,knowledgeBase);
+            break;
+            case 2;
+            addOrUpdateStatement(scanner, knowledgeBase);
+            break;
+            case 3:
+            searchByTerm(scanner , knowledgeBase);
+            break;
+            case 4:
+            searchByTermAndSentenceStatement(scanner , knowledgeBase);
+            break;
+            case 5:
+            running = false;
+            System.out.println("Bye");
+            break;
+            default:
+            System.out.println("Invalid choice.Please try again");
+        }
+        System.out.println();
+    }
+   }
+   scanner.close();
+   priavte static void displayMenu(){
+    System.out.println("Choose an action from the menu;");
+    System.out.println("1. Load a knowledge base from a file");
+    System.out.println("2. Add a new statement to the knowledge base");
+    System.out.println("3  Search for  a statement in the knowledge base by term");
+    System.out.println("4. Search for a statement in the knowledge  base by term and sentence");
+    System.out.println("5. Quit");
+   }
+   private static int getUserChoice(Scanner scanner){
+    System.out.print("Enter your choice: ");
+    while(!scanner.hasNextInt()){
+        System.out.print("Enter your choice: ");
+        scanner.next(); //consume the invalid input
+    }
+    return scanner.nextInt();
+   }
+   return scanner.nextInt();
+}

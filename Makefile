@@ -1,19 +1,34 @@
-# binary search program makefile
-# Hussein Suleman
-# 27 March 2017
+# makefile  to compile classes
+# Ziyanda Mthethwa
+# 2025/03/14
 
+# Java compiler path
 JAVAC=/usr/bin/javac
 
-.SUFFIXES: .java .class
+# All class files need for the  Assignment 1
+classes = BinaryTreeNode.class BinaryTree.class \
+         BTQueueNode.class BTQueue.class \
+         BinarySearchTree.class \
+		 Statement.class \
+		 GenericsKbBST.class \
+		 GenericsKb.class \
+		 GenericsKbArrayApp.class 
 
-.java.class:
+# Rule for compiling .java files to .class files
+%.class: %.java
 	$(JAVAC) $<
 
-classes: BinaryTreeNode.class BinaryTree.class \
-         BTQueueNode.class BTQueue.class \
-         BinarySearchTree.class BinarySearchTreeTest.class
+# Default target - compile all classes
+all: $(classes)
 
-default: $(CLASSES)
 
+# Run BST
+run-BST:
+	@java GenericsKbArrayApp
+
+run-Array:
+	@java GenericsKbBSTApp
+#clean up class files
 clean:
-	rm *.class
+	rm -f *.class
+ 

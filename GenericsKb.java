@@ -44,11 +44,16 @@ public GenericsKb(String term ,String statement,double confidenceScore){
  * @param filename the name  offile to read
  * @return the array of objects loaded from file
  */
-public static GenericsKb[] loadFromFile(String filename){
+public static GenericsKb[] loadFromFile(String filename) throws FileNotFoundException{
+   File file = new File(filename);
+   if (!file.exists()){
+      throw new FileNotFoundException("File not found: "+ filename);
+   }
    try{
-      File file = new File(filename);
+      
       lineCount = countLines(file); // Count the number of lines
       kbArray = new GenericsKb[lineCount];//Initialise the array
+      currentSize = 0; //resetting current size when loading a new file
       
       Scanner scanner = new Scanner(file);
       int index = 0;
@@ -60,6 +65,7 @@ public static GenericsKb[] loadFromFile(String filename){
          String statement = parts[1];
          double confidenceScore = Double.parseDouble(parts[2]);
 
+
       
       kbArray[index++] = new GenericsKb(term, statement, confidenceScore);
       currentSize++; //Increment current size
@@ -70,8 +76,7 @@ public static GenericsKb[] loadFromFile(String filename){
       System.out.println("Knowledge base loaded successfully.");
       return kbArray;
    }catch(FileNotFoundException e){
-      System.out.println("File not found. "+ filename);
-      return null;
+      throw e;
    }
  
 }

@@ -10,22 +10,23 @@ import java.io.File;
 import java.io.FileNotFoundException;
 
 public class GenericsKbBSTApp{
-   public static  void  main (String[] args) {
+   public static  void  main (String[] args)   {
     Scanner sc = new Scanner(System.in);
     boolean running = true;
     GenericsKbBST kb  = new GenericsKbBST();
     while (running){
         try{
             // Display the menu 
-            System.out.println("\nChoose an action from the menu: ");
+            System.out.println("Choose an action from the menu: ");
             System.out.println("1. Load a knowledge base from a file");
             System.out.println("2. Add a new statement to the knowledge base");
             System.out.println("3. Search for a statement in the knowledge base by term");
             System.out.println("4. Search for a statement in the knowledge base by term and sentence");
             System.out.println("5. Quit");
-            System.out.print("Enter your choice (1-5): ");
+            System.out.print("Enter your choice: ");
         
         String choice = sc.nextLine();
+
         //validate the choice
         if(!choice.matches("[1-5]")){
             throw new IllegalArgumentException("Invalid choice menu.");
@@ -40,6 +41,9 @@ public class GenericsKbBSTApp{
             File file = new File(filename);
             if(!file.exists()){throw new FileNotFoundException("File is not found: "+ filename);
         }
+        // load from the file using  loadFromFile method from GenericsKbBST
+        int statementsLoaded = kb.loadFromFile(filename);
+        System.out.println("Knowledge base loaded successfullly.");
             break;
             case "2":
             System.out.print("Enter the term: ");
@@ -63,10 +67,10 @@ public class GenericsKbBSTApp{
             Statement result= kb.searchByTerm(searchTerm);
             if(result != null){
                 
-                System.out.println("Statement found:" +result);
+                System.out.println("Statement found:" +result.getStatement() +" (Confidence score: "+ result.getConfidence()+")");
             }
         else{
-            System.out.println("No statement found for the term: "+ searchTerm);;
+            System.out.println("No statement found for the term: "+ searchTerm);
         }
             break;
             case "4":
@@ -94,7 +98,7 @@ public class GenericsKbBSTApp{
     catch (FileNotFoundException e){
         // handle file not found errors
         System.out.println("Error: " + e.getMessage());
-    }catch (@SuppressWarnings("hiding") IOException e){
+    }catch (IOException e){
         System.out.println("Error reading file: " + e.getMessage());
     }catch (Exception e){
         //Handle any other error

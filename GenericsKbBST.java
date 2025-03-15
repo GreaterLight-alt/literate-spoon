@@ -49,6 +49,8 @@ public boolean addOrUpdateStatement(String term, String sentence , double confid
             statementTree.insert(newStatement);
 return true;
         }
+        return false;
+    }
 
         else{
             // term doesnot exist yet ,add it
@@ -57,8 +59,9 @@ return true;
         }
     
     }
-    return false;
-}
+
+
+
 // finds a statement by its term
 public Statement searchByTerm(String term){
     //create a dummy statement with the search term

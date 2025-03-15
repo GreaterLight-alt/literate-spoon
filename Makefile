@@ -22,11 +22,11 @@ classes = BinaryTreeNode.class BinaryTree.class \
 all: $(classes)
 
 
-# Run BST
-run-BST:
+# Run Array
+run-Array:
 	@java GenericsKbArrayApp
 
-run-Array:
+run-BST:
 	@java GenericsKbBSTApp
 #clean up class files
 clean:

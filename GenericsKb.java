@@ -10,11 +10,20 @@ public class GenericsKb {
     private String term;
     private String statement;
     private double confidenceScore = 0.0;
-    private static GenericsKb[] kbArray; //Array to store objects
-    private static int lineCount; // to store the number of lines
-    private static  int currentSize = 0; //to track  number of entries currently stored
+
+    //variable for managing the entire knowledge base
+    private  GenericsKb[] kbArray; //Array to store objects
+   private int currentSize = 0;
+    
+//default constructor 
+public GenericsKb(){
+   kbArray = new GenericsKb[100000];
+   currentSize = 0;
+}
+
 
     // constructor to initialise an entry
+
 
 public GenericsKb(String term ,String statement,double confidenceScore){
     this.term = term;
@@ -28,7 +37,7 @@ public GenericsKb(String term ,String statement,double confidenceScore){
     * @return the number of line in the file
     * @throws FileNotFoundException if the file cannot be found
     */
-   public static int countLines(File file) throws FileNotFoundException{
+   public  int countLines(File file) throws FileNotFoundException{
       Scanner scanner  = new Scanner(file);
       int count = 0;
       while(scanner.hasNextLine()){
@@ -43,68 +52,43 @@ public GenericsKb(String term ,String statement,double confidenceScore){
  * loads knowledge base entries from a file
  * @param filename the name  offile to read
  * @return the array of objects loaded from file
+ * @throws FileNotFoundException if the fie is not found
  */
-public static GenericsKb[] loadFromFile(String filename) throws FileNotFoundException{
+public void loadFromFile(String filename) throws FileNotFoundException{
    File file = new File(filename);
    if (!file.exists()){
       throw new FileNotFoundException("File not found: "+ filename);
    }
    try{
-      
-      lineCount = countLines(file); // Count the number of lines
+   
+      int lineCount = countLines(file); // Count the number of lines
       kbArray = new GenericsKb[lineCount];//Initialise the array
-      currentSize = 0; //resetting current size when loading a new file
-      
+      currentSize = 0;
       Scanner scanner = new Scanner(file);
-      int index = 0;
+   
       while(scanner.hasNextLine()){
          String line = scanner.nextLine();
          String[] parts = line.split("\t");
       if (parts.length == 3){
-         String term = parts[0];
-         String statement = parts[1];
+         String term = parts[0].trim();
+         String statement = parts[1].trim();
          double confidenceScore = Double.parseDouble(parts[2]);
-
+// use to add entry or update ifit already exists
+      updateStatement(term,statement,confidenceScore);
+      }
+   }
       
-      kbArray[index++] = new GenericsKb(term, statement, confidenceScore);
-      currentSize++; //Increment current size
-     
-      }
-      }
       scanner.close();
       System.out.println("Knowledge base loaded successfully.");
-      return kbArray;
+   
    }catch(FileNotFoundException e){
       throw e;
    }
  
 }
-/**
- * update an existing knowledge base entry or adds a new one
- * @param term   to update /add
- * @param statement 
- * @param confidenceScore
- * @return if updated/false if not
- */
-public static boolean updateKnowledge(String term, String statement, double confidenceScore){
-   for(int i =0; i < currentSize; i++){
-   if (kbArray[i].getTerm().equalsIgnoreCase(term)){
-      //update if score is higher
-      if(confidenceScore > kbArray[i].getConfidence()){
-      kbArray[i].setStatement(statement);
-      kbArray[i].setconfidence(confidenceScore);
-return true;
-      }
-      return false; // terms exists but not updated
-   }
-}
-// if we only add if there in enough space 
-if (currentSize < kbArray.length){
-   kbArray[currentSize++] = new GenericsKb(term, statement, confidenceScore);
-   return true;
-}
-return false; // no space to add the entry
-}
+
+
+
 /**
  * Find knowledge base entry by term
  * @param term to search for 
@@ -112,13 +96,15 @@ return false; // no space to add the entry
  * 
  */
 
- public static GenericsKb findByTermKb(String term){
-   for(int i =0 ; i < lineCount; i++){
-      if (kbArray[i]!= null && kbArray[i].getTerm().equalsIgnoreCase(term)){
-         return kbArray[i];
+ public String  findByTermKb(String term){
+
+   for(int i = 0; i < currentSize; i++) {  // check if each term in the array matches with the one being searched for
+      if (kbArray[i].getTerm().equalsIgnoreCase(term)) {
+           return "Statement found: "+ kbArray[i].getStatement()  +" (Confidence score: " + String.format("%.2f",kbArray[i].getConfidence()) +")"; // making sure the confidence score is in 2 decimal places
       }
-   }
-return null;
+   } 
+   return "Term is not found." ;
+   
       
 }
 
@@ -130,7 +116,7 @@ return null;
  * @return true if updated or added , false otherwise
  */
 // method to add or update a new statement to the array
-public static boolean updateStatement (String term,String statement, double confidenceScore){
+public boolean updateStatement (String term,String statement, double confidenceScore){
    //first check if the statement exits
    for(int i = 0 ; i < currentSize; i++){
 if (kbArray[i]  != null && kbArray[i].getTerm().equalsIgnoreCase(term)){
@@ -141,10 +127,9 @@ if (kbArray[i]  != null && kbArray[i].getTerm().equalsIgnoreCase(term)){
       return true;
    }
    return false;
-}
 
 }
-
+}
 // Add new entry if it doesn't exist and there's space
 if (currentSize < kbArray.length){
    kbArray[currentSize++] = new GenericsKb(term, statement, confidenceScore);
@@ -159,9 +144,9 @@ return false;
  * @return the confidence score if found , -1 otherwise
  * 
  */
-public static double findByTermKbandStatement(String term,String statement){
+public  double findByTermKbandStatement(String term,String statement){
    for(int i = 0; i < currentSize; i++){
-      if(kbArray[i] != null && kbArray[i].getTerm().equalsIgnoreCase(term)  && kbArray[i].getStatement().equalsIgnoreCase(statement)){
+      if(kbArray[i].getTerm().equalsIgnoreCase(term) && kbArray[i].getStatement().equalsIgnoreCase(statement)){
          return kbArray[i].getConfidence();
       }
 

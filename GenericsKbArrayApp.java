@@ -12,52 +12,57 @@ public class GenericsKbArrayApp{
 
 public static void main(String[]args) {
     Scanner sc = new Scanner(System.in);
-    boolean running = true;
+    //create an instance of GenericsKb to act as the knowledge base
+    GenericsKb knowledgeBase = new GenericsKb();
+    
     //load the file with exception handling
 try{
-GenericsKb.loadFromFile("GenericsKB.txt");
-}catch(Exception e){
+knowledgeBase.loadFromFile("GenericsKB.txt");
+}catch(FileNotFoundException e){
     System.out.println("Error loading default file." + e.getMessage());
+    return;//Exit program
 }
+boolean running = true;
     while(running){
         try{
         // Display the menu 
-        System.out.println("Choose an action from the menu: ");
+        System.out.println("\n Choose an action from the menu: ");
         System.out.println("1. Load a knowledge base from a file");
         System.out.println("2. Add a new statement to the knowledge base");
         System.out.println("3. Search for a statement in the knowledge base by term");
         System.out.println("4. Search for a statement in the knowledge base by term and sentence");
         System.out.println("5. Quit");
         System.out.print("Enter your choice: ");
-        
-        String choice = sc.nextLine();
-        // check the choice input
-        if(!choice.matches("[1-5]")){
-            throw new IllegalArgumentException("Invalid Menu choice");
+        int choice;
+        try{
+            choice = Integer.parseInt(sc.nextLine());
+        }catch (NumberFormatException e){
+            System.out.println("Error: Please enter a valid number.");
+            continue;
         }
-         
+        
+       
         //Switch Case
         switch(choice) {
-            case "1":
+            case 1:
             // implement file loading
             System.out.print
             ("Enter file name: ");
             String filename = sc.nextLine();
             //check if file exists
             File file = new File(filename);
-            if(!file.exists()){throw new FileNotFoundException("File is not found: "+ filename);
-        }
-            GenericsKb.loadFromFile(filename);
-            break;
-            case "2":
+        
+        knowledgeBase.loadFromFile(filename);
+         break;
+            case 2:
             System.out.print("Enter the term: ");
             String term = sc.nextLine();
             System.out.print("Enter the statement: ");
             String statement = sc.nextLine();
             System.out.print("Enter the confidence score:");
             double confidenceScore = Double.parseDouble(sc.nextLine());
-            boolean updated = GenericsKb.updateStatement(term,statement,confidenceScore);
-            if(updated ){
+            if(knowledgeBase.updateStatement(term,statement,confidenceScore)){
+            
                 System.out.println("Statement for term "+ term + " has been updated.");
             }
             else{
@@ -66,11 +71,11 @@ GenericsKb.loadFromFile("GenericsKB.txt");
 
             break;
 
-            case "3":
+            case 3:
     
-            System.out.println("Enter the term to search: ");
+            System.out.print("Enter the term to search: ");
             String searchTerm = sc.nextLine();
-            GenericsKb result= GenericsKb.findByTermKb(searchTerm);
+            String result= knowledgeBase.findByTermKb(searchTerm);
             if(result != null){
                 
                 System.out.println(result);
@@ -79,20 +84,20 @@ GenericsKb.loadFromFile("GenericsKB.txt");
             System.out.println("No statement found for the term: "+ searchTerm);;
         }
             break;
-            case "4":
+            case 4:
         
             System.out.print("Enter the term: ");
             String termString = sc.nextLine();
             System.out.print("Enter the statement to search for: ");
             String statemString = sc.nextLine();
-          double score =  GenericsKb.findByTermKbandStatement(termString, statemString);
+          double score =  knowledgeBase.findByTermKbandStatement(termString, statemString);
           if(score>=0){
             System.out.println("The statement was found and has confidence score of" + score + ".");
           }else{
             System.out.println("The statement was not found.");
           }
             break;
-            case "5":
+            case 5:
             running = false;
             System.out.println("Quit");
             break;

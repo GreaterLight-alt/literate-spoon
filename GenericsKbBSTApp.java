@@ -10,7 +10,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 
 public class GenericsKbBSTApp{
-   public static void main String(String[] args) {
+   public static  void  main String(String[] args) {
     Scanner sc = new Scanner(System.in);
     GenericsKbBST knowledgeBase = new GenericsKbBST();
     boolean running = true;

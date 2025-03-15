@@ -1,4 +1,8 @@
-
+/*
+ * @ author Ziyanda Mthethwa
+ *
+ * 
+ */
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -38,19 +42,20 @@ public void  addOrUpdateStatement(String term, String sentence , double confiden
     Statement  newStatement = new Statement(term, sentence, confidenceScore);
     // check if we already have this term
     BinaryTreeNode<Statement> existingNode = statementTree.find(newStatement );
-    if (existingNode != null){
+    
         //only replace if the new confidence is higher
         if (confidenceScore > existingNode.data.getConfidence()){
             statementTree.delete(existingNode.data);
             statementTree.insert(newStatement);
 
         }
+
         else{
             // term doesnot exist yet ,add it
             statementTree.insert(newStatement);
         }
     }
-}
+
 // finds a statement by its term
 public Statement searchByTerm(String term){
     //create a dummy statement with the search term

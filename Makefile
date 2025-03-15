@@ -7,28 +7,28 @@
 # Based on Hussein Suleman's format
 # March 15, 2025
 
-JAVAC=/usr/bin/javac
-.SUFFIXES: .java .class
 
-.java.class:
-	$(JAVAC) $$
 
-CLASSES=BinaryTreeNode.class BinaryTree.class \
-        BTQueueNode.class BTQueue.class \
-        BinarySearchTree.class  \
-        Statement.class GenericsKb.class \
-        GenericsKbAppArray.class GenericsKbArrayApp.class \
-        GenericsKbBST.class GenericsKbBSTApp.class
+JAVAC = /usr/bin/javac
+JAR = /usr/bin/jar
+JVM = java
 
-classes: $(CLASSES)
+# Java source files
+SOURCES = $(wildcard *.java)
 
+# Java class files (created by compiling Java source files)
+CLASSES = $(SOURCES:.java=.class)
+
+# Default target: compile all the classes
 default: classes
 
+# Target to compile all Java source files
+classes: $(CLASSES)
+
+# Rule to compile a .java file into a .class file
+%.class: %.java
+	$(JAVAC) $<
+
+# Clean up: remove all class files
 clean:
-	rm *.class
-
-
-
-
-
-
+	rm -f $(CLASSES)

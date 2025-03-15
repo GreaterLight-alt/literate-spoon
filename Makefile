@@ -2,32 +2,33 @@
 # Makefile to compile classes
 # Ziyanda Mthethwa
 # 2025/03/14
+# binary search program makefile
+# Binary tree and generics project makefile
+# Based on Hussein Suleman's format
+# March 15, 2025
 
-# Java compiler path
 JAVAC=/usr/bin/javac
+.SUFFIXES: .java .class
 
-# Find all .java files in the current directory
-SOURCES=$(wildcard *.java)
+.java.class:
+	$(JAVAC) $
 
-# Convert .java files to .class files
-CLASSES=$(SOURCES:.java=.class)
+CLASSES=BinaryTreeNode.class BinaryTree.class \
+        BTQueueNode.class BTQueue.class \
+        BinarySearchTree.class  \
+        Statement.class GenericsKb.class \
+        GenericsKbAppArray.class GenericsKbArrayApp.class \
+        GenericsKbBST.class GenericsKbBSTApp.class
 
-# Rule for compiling .java files to .class files
-%.class: %.java
-    $(JAVAC) $<
+classes: $(CLASSES)
 
-# Default target - compile all classes
-all: $(CLASSES)
+default: classes
 
-# Run Array
-run-Array:
-    @java GenericsKbArrayApp
-
-# Run BST
-run-BST:
-    @java GenericsKbBSTApp
-
-# Clean up class files
 clean:
-    rm -f *.class	
- 
+	rm *.class
+
+
+
+
+
+

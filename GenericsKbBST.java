@@ -38,7 +38,7 @@ public class GenericsKbBST{
     return count;
    }
 // adds new statements /updates existing ones
-public void  addOrUpdateStatement(String term, String sentence , double confidenceScore){
+public boolean addOrUpdateStatement(String term, String sentence , double confidenceScore){
     Statement  newStatement = new Statement(term, sentence, confidenceScore);
     // check if we already have this term
     BinaryTreeNode<Statement> existingNode = statementTree.find(newStatement );
@@ -47,14 +47,17 @@ public void  addOrUpdateStatement(String term, String sentence , double confiden
         if (confidenceScore > existingNode.data.getConfidence()){
             statementTree.delete(existingNode.data);
             statementTree.insert(newStatement);
-
+return true;
         }
 
         else{
             // term doesnot exist yet ,add it
             statementTree.insert(newStatement);
+            return true;
         }
+    
     }
+    return false;
 }
 // finds a statement by its term
 public Statement searchByTerm(String term){

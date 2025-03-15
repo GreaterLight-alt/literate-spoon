@@ -10,9 +10,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 
 public class GenericsKbBSTApp{
-   public static  void  main String(String[] args) {
+   public static  void  main (String[] args) {
     Scanner sc = new Scanner(System.in);
-    GenericsKbBST knowledgeBase = new GenericsKbBST();
     boolean running = true;
     GenericsKbBST kb  = new GenericsKbBST();
     while (running){
@@ -29,7 +28,7 @@ public class GenericsKbBSTApp{
         String choice = sc.nextLine();
         //validate the choice
         if(!choice.matches("[1-5]")){
-            throw new IllegalArgumentException("Invalid choice menu.")
+            throw new IllegalArgumentException("Invalid choice menu.");
         }
         switch(choice){
             case "1":
@@ -42,7 +41,7 @@ public class GenericsKbBSTApp{
             if(!file.exists()){throw new FileNotFoundException("File is not found: "+ filename);
         }
             break;
-            case "2";
+            case "2":
             System.out.print("Enter the term: ");
             String term = sc.nextLine();
             System.out.print("Enter the statement: ");
@@ -61,7 +60,7 @@ public class GenericsKbBSTApp{
     
             System.out.println("Enter the term to search: ");
             String searchTerm = sc.nextLine();
-            Statement result= kb.searchByTermTermKb(searchTerm);
+            Statement result= kb.searchByTerm(searchTerm);
             if(result != null){
                 
                 System.out.println("Statement found:" +result);
@@ -95,8 +94,8 @@ public class GenericsKbBSTApp{
     catch (FileNotFoundException e){
         // handle file not found errors
         System.out.println("Error: " + e.getMessage());
-    }catch (IOException e){
-        Sytem.out.println("Error reading file: " + e.getMessage());
+    }catch (@SuppressWarnings("hiding") IOException e){
+        System.out.println("Error reading file: " + e.getMessage());
     }catch (Exception e){
         //Handle any other error
         System.out.println("Unexpected error occured: "+ e.getMessage());

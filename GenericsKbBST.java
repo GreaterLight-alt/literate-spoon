@@ -42,7 +42,7 @@ public void  addOrUpdateStatement(String term, String sentence , double confiden
     Statement  newStatement = new Statement(term, sentence, confidenceScore);
     // check if we already have this term
     BinaryTreeNode<Statement> existingNode = statementTree.find(newStatement );
-    
+    if(existingNode != null){
         //only replace if the new confidence is higher
         if (confidenceScore > existingNode.data.getConfidence()){
             statementTree.delete(existingNode.data);
@@ -55,7 +55,7 @@ public void  addOrUpdateStatement(String term, String sentence , double confiden
             statementTree.insert(newStatement);
         }
     }
-
+}
 // finds a statement by its term
 public Statement searchByTerm(String term){
     //create a dummy statement with the search term

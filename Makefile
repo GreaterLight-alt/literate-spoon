@@ -11,7 +11,7 @@ JAVAC=/usr/bin/javac
 .SUFFIXES: .java .class
 
 .java.class:
-	$(JAVAC) $
+	$(JAVAC) $$
 
 CLASSES=BinaryTreeNode.class BinaryTree.class \
         BTQueueNode.class BTQueue.class \

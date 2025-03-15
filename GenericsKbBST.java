@@ -25,7 +25,7 @@ public class GenericsKbBST{
     while ((line = reader.readLine()) != null){
         // split by tabs
         String[] parts = line.split("\t");
-        if (parts.length >= 3){
+        if (parts.length == 3){
            String term = parts[0];
            String statement = parts[1];
            double confidenceScore = Double.parseDouble(parts[2]);

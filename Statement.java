@@ -25,6 +25,17 @@ public class Statement implements Comparable<Statement>{
      public double getConfidence(){
         return confidenceScore;
      }
+       public void setStatement(String statement){
+         this.statement = statement;
+      
+       }
+         public void setTerm(String term){
+            this.term= term;
+         }
+         public void setConfidence(double confidenceScore){
+            this.confidenceScore = confidenceScore;
+         }
+         
      @Override 
      /* method that compares two statements by comparing their terms
       * 

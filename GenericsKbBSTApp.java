@@ -43,23 +43,45 @@ public class GenericsKbBSTApp{
         }
         // load from the file using  loadFromFile method from GenericsKbBST
         int statementsLoaded = kb.loadFromFile(filename);
-        System.out.println("Knowledge base loaded successfullly.");
+        System.out.println(statementsLoaded + " statements loaded successfully.");
             break;
             case "2":
-            System.out.print("Enter the term: ");
-            String term = sc.nextLine();
-            System.out.print("Enter the statement: ");
-            String statement = sc.nextLine();
-            System.out.print("Enter the confidence score:");
-            double confidenceScore = Double.parseDouble(sc.nextLine());
-            boolean updated = kb.addOrUpdateStatement(term,statement,confidenceScore);
-            if(updated ){
-                System.out.println("Statement for term "+ term + " has been updated.");
+
+            System.out.print("Would you like to add a single statement (s) or a file with statements (f)? ");
+            String option = sc.nextLine().trim().toLowerCase();
+
+            if (option.equals("s")) {
+                // Single statement addition
+                System.out.print("Enter the term: ");
+                String term = sc.nextLine();
+                System.out.print("Enter the statement: ");
+                String statement = sc.nextLine();
+                System.out.print("Enter the confidence score: ");
+                double confidenceScore = Double.parseDouble(sc.nextLine());
+
+                boolean updated = kb.addOrUpdateStatement(term, statement, confidenceScore);
+                if (updated) {
+                    System.out.println("Statement for term '" + term + "' has been added or updated.");
+                } else {
+                    System.out.println("Statement for term '" + term + "' was not updated (lower confidence score).");
+                }
+            } else if (option.equals("f")) {
+                // File addition
+                System.out.print("Enter file name: ");
+                String fileToAdd = sc.nextLine();
+                File fileObj = new File(fileToAdd);
+
+                if (!fileObj.exists()) {
+                    throw new FileNotFoundException("File not found: " + fileToAdd);
+                }
+
+                int addedStatements = kb.loadFromFile(fileToAdd);
+                System.out.println(addedStatements + " statements added or updated from file.");
+            } else {
+                System.out.println("Invalid option. Please enter 's' for statement or 'f' for file.");
             }
-            else{
-                System.out.println("Statement for term "+ term + " could not be updated.");   
-            }
-            break;
+            break;  
+            
             case "3":
     
             System.out.println("Enter the term to search: ");

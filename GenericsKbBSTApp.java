@@ -103,7 +103,7 @@ public class GenericsKbBSTApp{
             String statemString = sc.nextLine();
           Statement foundSta =  kb.searchByTermAndSentenceStatement(termString, statemString);
           if(foundSta != null){
-            System.out.println("The statement was found and has confidence score of" + foundSta.getConfidence() + ".");
+            System.out.println("The statement was found and has confidence score of " + foundSta.getConfidence() + ".");
           }else{
             System.out.println("The statement was not found.");
           }

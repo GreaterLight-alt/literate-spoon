@@ -4,7 +4,6 @@ this class the main method and handle the user interface(text-base menu)
 this shows the menu and awaits the users input
 */ 
 import java.util.Scanner;
-import java.io.File;
 import java.io.FileNotFoundException;
 
 
@@ -20,6 +19,7 @@ try{
 knowledgeBase.loadFromFile("GenericsKB.txt");
 }catch(FileNotFoundException e){
     System.out.println("Error loading default file." + e.getMessage());
+    sc.close();
     return;//Exit program
 }
 boolean running = true;
@@ -50,7 +50,6 @@ boolean running = true;
             ("Enter file name: ");
             String filename = sc.nextLine();
             //check if file exists
-            File file = new File(filename);
         
         knowledgeBase.loadFromFile(filename);
          break;

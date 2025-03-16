@@ -51,24 +51,31 @@ public class GenericsKbBST{
      * @param confidenceScore The confidence score of the statement
      * @return True if the statement was added or updated, false otherwise
      */
-public boolean addOrUpdateStatement(String term, String statement , double confidenceScore){
-    Statement  newStatement = new Statement(term, statement, confidenceScore);
-    // check if we already have this term
-    BinaryTreeNode<Statement> existingNode = statementTree.find(newStatement );
-    if(existingNode != null){
-        //only replace if the new confidence is higher
-        if (confidenceScore > existingNode.data.getConfidence()){
-            existingNode.data.setStatement(statement);
-            existingNode.data.setConfidence(confidenceScore);
+
+
+     public boolean addOrUpdateStatement(String term, String statement, double confidenceScore) {
+        Statement newStatement = new Statement(term, statement, confidenceScore);
+        BinaryTreeNode<Statement> existingNode = statementTree.find(newStatement);
+    
+        if (existingNode != null) {
+            // Only update if the new confidence score is higher
+            if (confidenceScore > existingNode.data.getConfidence()) {
+                existingNode.data.setStatement(statement);
+                existingNode.data.setConfidence(confidenceScore);
+                return true;
+            } else {
+                // No update since confidence score is lower
+                System.out.println("Update unsuccessful. Existing confidence score (" + existingNode.data.getConfidence() + 
+                                   ") is higher than the new confidence score (" + confidenceScore + ").");
+                return false;
+            }
+        } else {
+            // Insert a new term into the BST
+            statementTree.insert(newStatement);
             return true;
         }
-            return false;// no update if confidence score is lower
-        }
-    
-        // term does not exist yet, add it
-        statementTree.insert(newStatement);
-        return true;
     }
+        
 
 
 

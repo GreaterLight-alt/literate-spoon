@@ -9,8 +9,8 @@ JAVAC=/usr/bin/javac
 .java.class:
 	$(JAVAC) $<
 
-classes: BinaryTreeNode.class BinaryTree.class \
-        Statement.class GenericssKBAVLApp.class \
+classes: BinaryTreeNode.class BinaryTree.class  AVLTree.class\
+        Statement.class GenericsKbAVLApp.class \
          
 
 default: $(CLASSES)

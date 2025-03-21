@@ -1,36 +1,24 @@
-# Makefile for MyRepo Java Project
-# This Makefile compiles all Java source files in src/,
-# outputs the .class files to bin/, and generates Javadoc in doc/.
+SRC := $(wildcard src/*.java)
+BIN := bin
+DOC := doc
 
-JAVAC    = javac
-JAVADOC  = javadoc
+# Default target
+all: classes javadoc
 
-# Directories
-SRC = src
-BIN = bin
-DOC = doc
+# Compile Java files into bin directory
+classes: $(SRC)
+	mkdir -p $(BIN)	
+	javac -d $(BIN) $(SRC)
 
-# Find all Java source files in the src directory.
-SOURCES = $(wildcard $(SRC)/*.java)
+# Generate Javadoc into doc directory
+javadoc:
+	mkdir -p $(DOC)
+	javadoc -d $(DOC) $(SRC)
 
-# Default target: Create directories, compile classes, and generate Javadoc.
-all: directories classes doc
-
-# Create the bin and doc directories if they do not exist.
-directories:
-	mkdir -p $(BIN) $(DOC)
-
-# Compile all Java source files, outputting .class files to the bin directory.
-classes: $(SOURCES)
-	$(JAVAC) -d $(BIN) $(SOURCES)
-
-# Generate Javadoc from the source files and store it in the doc directory.
-doc: $(SOURCES)
-	$(JAVADOC) -d $(DOC) -sourcepath $(SRC) $(SOURCES)
-
-# Clean up compiled classes and Javadoc.
+# Clean up generated files
 clean:
-	-rm -rf $(BIN)/* $(DOC)/*
+	rm -rf $(BIN)/*
+	rm -rf $(DOC)/*
 
-
+.PHONY: all classes javadoc clean
 

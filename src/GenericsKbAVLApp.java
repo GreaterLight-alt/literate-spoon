@@ -9,13 +9,12 @@ import java.io.FileNotFoundException;
 import java.util.Scanner;
 public class GenericsKbAVLApp{
     
-
- public static  void  main (String[] args)   {
+ public static  void  main (String[] args){
     AVLTree knowledgeBase = new AVLTree();
     
     //Load knowledge base from file
         try{
-    File myObj = new File("GenericsKb.txt");
+    File myObj = new File("GenericsKB.txt");
     Scanner myReader = new Scanner(myObj);
     while(myReader.hasNextLine()){
         String data = myReader.nextLine();
@@ -42,13 +41,15 @@ try {
     Scanner quScanner = new Scanner(queryFile);
     while(quScanner.hasNextLine()){
         String term = quScanner.nextLine().trim();
-        BinaryTreeNode<Statement> result = knowledgeBase.find(new Statement(term, "", 0.0));
+        //Create a debug statement to see what we're searching for 
+        Statement searchStatement = new Statement(term, "", 0.0);
+        BinaryTreeNode<Statement> result = knowledgeBase.find(searchStatement);
 if (result != null){
-    System.out.println(result);
+    System.out.println("Found: "+ result.data);
 
 }
 else{
-    System.out.println("Term was not found:" + term);
+    System.out.println("Term was not found: \"" + term + "\"");
 }
     }
 

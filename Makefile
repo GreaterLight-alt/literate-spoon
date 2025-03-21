@@ -1,51 +1,36 @@
-# binary search program makefile
-# Hussein Suleman
+# Makefile for MyRepo Java Project
+# This Makefile compiles all Java source files in src/,
+# outputs the .class files to bin/, and generates Javadoc in doc/.
 
+JAVAC    = javac
+JAVADOC  = javadoc
 
+# Directories
+SRC = src
+BIN = bin
+DOC = doc
 
+# Find all Java source files in the src directory.
+SOURCES = $(wildcard $(SRC)/*.java)
 
-# Makefile for CSC2001F Assignment 2
-#
-# This Makefile compiles Java source files from the src/ directory into bin/
-# and generates Javadoc documentation in the doc/ directory.
-#
-# Usage:
-#   make         (to compile the project)
-#   make doc     (to generate Javadoc documentation)
-#   make clean   (to remove compiled class files and documentation)
-#
-# Note: Javadoc does not generate documentation for classes in the default package
-# when using -subpackages. In this variant, we list the source files directly.
+# Default target: Create directories, compile classes, and generate Javadoc.
+all: directories classes doc
 
-# Define the Java compiler command.
-JAVAC = javac
-# Define the Javadoc command.
-JAVADOC = javadoc
+# Create the bin and doc directories if they do not exist.
+directories:
+	mkdir -p $(BIN) $(DOC)
 
-# Compiler flags:
-# '-d bin' directs the compiler to output the class files into the 'bin' directory.
-# '-sourcepath src' tells the compiler where to find the source files.
-JFLAGS = -d bin -sourcepath src
+# Compile all Java source files, outputting .class files to the bin directory.
+classes: $(SOURCES)
+	$(JAVAC) -d $(BIN) $(SOURCES)
 
-# Define SRC as all Java source files in the src/ directory.
-SRC := $(wildcard src/*.java)
+# Generate Javadoc from the source files and store it in the doc directory.
+doc: $(SOURCES)
+	$(JAVADOC) -d $(DOC) -sourcepath $(SRC) $(SOURCES)
 
-# Define the 'all' target. This is a phony target (not a file) that depends on the 'bin' target.
-.PHONY: all
-all: bin
-	$(JAVAC) $(JFLAGS) $(SRC)
-
-# Define the 'bin' target to create the bin/ directory if it doesn't exist.
-bin:
-	mkdir -p bin
-
-# Define the 'doc' target as a phony target for generating documentation.
-.PHONY: doc
-doc:
-	$(JAVADOC) -d doc $(SRC)
-
-# Define the 'clean' target as a phony target to remove generated files.
-.PHONY: clean
+# Clean up compiled classes and Javadoc.
 clean:
-	$(RM) bin/*
-	rm -rf doc
+	-rm -rf $(BIN)/* $(DOC)/*
+
+
+

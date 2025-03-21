@@ -85,13 +85,18 @@ public class AVLTree
   
    public BinaryTreeNode<Statement> find (Statement d )
    {
-      if (root == null)
-         return null;
-      else
-         return find (d, root);
+   if (root == null) {
+      System.out.println("Tree is empty");
+      return null;
+   } else {
+      return find (d, root);}
    }
+
    public BinaryTreeNode<Statement> find ( Statement d, BinaryTreeNode<Statement> node )
-   {
+   {//
+      // Debug output
+    System.out.println("Comparing: \"" + d.getTerm() + "\" with \"" + node.data.getTerm() + "\"");
+    System.out.println("Comparison result: " + d.compareTo(node.data)); 
       if (d.compareTo (node.data) == 0) 
          return node;
       else if (d.compareTo (node.data) < 0)

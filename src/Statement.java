@@ -4,9 +4,9 @@
  */
 
  public class Statement implements Comparable<Statement>{
-    String term;
-    String sentence;
-    double confidenceScore;
+    private String term;
+    private String sentence;
+    private double confidenceScore;
 
     
     

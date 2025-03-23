@@ -11,6 +11,8 @@ import java.util.Scanner;
 public class AVLTree
 {
    private BinaryTreeNode<Statement> root;
+   private  int  countSearch = 0;
+   private  int  countInsert = 0;
    public int height ( BinaryTreeNode<Statement> node )
    {
       if (node != null)
@@ -71,12 +73,16 @@ public class AVLTree
       root = insert (d, root);
    }
    public BinaryTreeNode<Statement> insert ( Statement d, BinaryTreeNode<Statement> node )
-   {
+   {countInsert++;
       if (node == null)
          return new BinaryTreeNode<Statement> (d, null, null);
-      if (d.compareTo (node.data) <= 0)
+         countInsert++;
+      if (d.compareTo (node.data) < 0)
          node.left = insert (d, node.left);
-      else
+      else if(d.compareTo(node.data)>0)
+      node.right = insert(d, node.right);
+         
+
          node.right = insert (d, node.right);
       return balance (node);
    }
@@ -84,25 +90,26 @@ public class AVLTree
  
   
    public BinaryTreeNode<Statement> find (Statement d )
-   {
+   {countSearch++;
    if (root == null) {
       System.out.println("Tree is empty");
       return null;
-   } else {
+   }
+   else {
       return find (d, root);}
    }
 
    public BinaryTreeNode<Statement> find ( Statement d, BinaryTreeNode<Statement> node )
    {//
       // Debug output
-    System.out.println("Comparing: \"" + d.getTerm() + "\" with \"" + node.data.getTerm() + "\"");
-    System.out.println("Comparison result: " + d.compareTo(node.data)); 
-      if (d.compareTo (node.data) == 0) 
-         return node;
-      else if (d.compareTo (node.data) < 0)
-         return (node.left == null) ? null : find (d, node.left);
-      else
-         return (node.right == null) ? null : find (d, node.right);
+    
+    countSearch++;
+   if (d.compareTo (node.data) == 0) 
+      return node;
+   countSearch++;
+   if (d.compareTo (node.data) < 0)
+      return (node.left == null) ? null : find (d, node.left);
+   return (node.right == null) ? null : find (d, node.right);
    }
 
     // Existing methods and fields
@@ -119,6 +126,11 @@ public class AVLTree
                 String term = parts[0].trim();
                 String statement = parts[1].trim();
                 double confidenceScore = Double.parseDouble(parts[2].trim());
+                try{
+               } catch (NumberFormatException e) {
+                  System.err.println("Error parsing confidence score: " + parts[2]);
+                  continue; // Skip invalid entries
+              }
                 this.insert(new Statement(term, statement, confidenceScore));
                 count++;
             }

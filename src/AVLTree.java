@@ -123,7 +123,7 @@ public class AVLTree
      * @return The updated node after insertion.
      */
    public BinaryTreeNode<Statement> insert ( Statement d, BinaryTreeNode<Statement> node )
-   {countInsert++;
+   {
       if (node == null){
          return new BinaryTreeNode<Statement> (d, null, null);
       }
@@ -146,7 +146,7 @@ public class AVLTree
      */
   
    public BinaryTreeNode<Statement> find (Statement d )
-   {countSearch++;
+   {
    if (root == null) {
       System.out.println("Tree is empty");
       return null;
@@ -169,12 +169,14 @@ if (node == null){
 
 }
 countSearch++;
-   if (d.compareTo (node.data) == 0) 
-      return node;
+int cmp = d.compareTo(node.data);
+   if (cmp == 0){
+      return node;}
    countSearch++;
-   if (d.compareTo (node.data) < 0)
-      return (node.left == null) ? null : find (d, node.left);
-   return (node.right == null) ? null : find (d, node.right);
+   if (cmp < 0){
+      return find(d, node.left) ;}
+      else{return find(d, node.right);
+      }
    }
 
     // Existing methods and fields
@@ -197,14 +199,16 @@ countSearch++;
             if (parts.length == 3) {
                 String term = parts[0].trim();
                 String statement = parts[1].trim();
-                double confidenceScore = Double.parseDouble(parts[2].trim());
+   
                 try{
+                  double confidenceScore = Double.parseDouble(parts[2].trim());
+                  this.insert(new Statement(term, statement, confidenceScore));
+                count++;
                } catch (NumberFormatException e) {
                   System.err.println("Error parsing confidence score: " + parts[2]);
                   continue; // Skip invalid entries
               }
-                this.insert(new Statement(term, statement, confidenceScore));
-                count++;
+                
             }
         }
 

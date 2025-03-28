@@ -14,6 +14,9 @@ public class GenericsKbAVLApp {
     
         Scanner keyboard = new Scanner(System.in);
         AVLTree knowledgebase = null;
+        boolean running = true;
+        while (running){
+            displayMenu();
     
 try{
     int input = Integer.parseInt(keyboard.nextLine().trim());
@@ -42,6 +45,8 @@ try{
     }
 
     }
+    keyboard.close();
+}
     /*
      * displays the main menu options
      */

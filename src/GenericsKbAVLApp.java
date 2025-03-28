@@ -8,82 +8,121 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
+
 public class GenericsKbAVLApp {
     public static void main(String[] args) {
-        AVLTree knowledgeBase = new AVLTree();
+    
         Scanner keyboard = new Scanner(System.in);
-        boolean running = true;
+        AVLTree knowledgebase = null;
+    
+try{
+    int input = Integer.parseInt(keyboard.nextLine().trim());
+    switch (input) {
+        case 1:
+            // Load knowledge base from file
+            
+                knowledgebase = loadKnowledgeBase(keyboard);
+                break;
+            
 
-        while (running) {
+        case 2:
+        performSearch(keyboard,knowledgebase);
+        break;
+
+        case 3:
+        System.out.println("GoodBye");
+        return;
+
+        default:
+        System.out.println("Invalid choice.Please try again");
+            
+}
+    }catch (NumberFormatException e){
+        System.out.println("Please enter a valid number.");
+    }
+
+    }
+    /*
+     * displays the main menu options
+     */
+        public static void displayMenu(){
             System.out.println("Choose an action from the menu:");
             System.out.println("1. Load a knowledge base from a file");
             System.out.println("2. Add a file with a list of words to perform a search");
             System.out.println("3. Quit");
             System.out.print("Enter your choice: ");
+        }
+    
+     /*
+     loads a knowledge base from a file
 
-            int input;
-            try {
-                input = Integer.parseInt(keyboard.nextLine().trim());
-            } catch (NumberFormatException e) {
-                System.out.println("Invalid input. Please enter a number between 1 and 3.");
-                continue;
+      */       
+      private static AVLTree loadKnowledgeBase(Scanner keyboard){
+        AVLTree knowledgeBase = new AVLTree();
+        System.out.print("Enter a file name:");
+        String fileName = keyboard.nextLine();
+        try{
+         File file = new File(fileName) ;
+         Scanner scan = new Scanner(file);
+         while(scan.hasNextLine()){
+            String line = scan.nextLine();
+            String[] parts = line.split("\t");
+            if (parts.length == 3){
+                Statement statement = new Statement(parts[0],parts[1], Double.parseDouble(parts[2]));
+                knowledgeBase.insert(statement);
             }
-
-            switch (input) {
-                case 1:
-                    // Load knowledge base from file
-                    try {
-                        File myObj = new File("GenericsKB.txt");
-                        Scanner myReader = new Scanner(myObj);
-                        while (myReader.hasNextLine()) {
-                            String data = myReader.nextLine();
-                            String[] parts = data.split("\t", 3);
-                            if (parts.length == 3) {
-                                String term = parts[0].trim();
-                                String statement = parts[1].trim();
-                                double confidenceScore = Double.parseDouble(parts[2].trim());
-                                knowledgeBase.insert(new Statement(term, statement, confidenceScore));
-                            }
-                        }
-                        myReader.close();
-                        System.out.println("Knowledge base loaded successfully.");
-                    } catch (FileNotFoundException e) {
-                        System.out.println("An error has occurred. The file was not found.");
-                    }
-                    break;
-
-                case 2:
-                    // Process queries from file
-                    try {
-                        File queryFile = new File("GenericsKB-queries.txt");
-                        Scanner quScanner = new Scanner(queryFile);
-                        while (quScanner.hasNextLine()) {
-                            String term = quScanner.nextLine().trim();
-                            Statement searchStatement = new Statement(term, "", 0.0);
-                            BinaryTreeNode<Statement> result = knowledgeBase.find(searchStatement);
-                            if (result != null) {
-                                System.out.println("Found: " + result.data);
-                            } else {
-                                System.out.println("Term was not found: \"" + term + "\"");
-                            }
-                        }
-                        quScanner.close();
-                    } catch (FileNotFoundException e) {
-                        System.err.println("Error: GenericsKB-queries.txt not found.");
-                    }
-                    break;
-
-                case 3:
-                    // Quit the program
-                    System.out.println("Exiting the program. Goodbye!");
-                    running = false;
-                    break;
-
-                default:
-                    System.out.println("Invalid choice. Please select a valid option.");
-            }
+         }
+scan.close();
+System.out.println("Knowledge base loaded successfully.");
+return knowledgeBase;
+        }catch(FileNotFoundException e){
+            System.out.println("File not found: "+ fileName);
+        }catch (NumberFormatException e){
+            System.out.println("Error parsing confidence score in the file.");
         }
 
-        keyboard.close();
+return null;
+
+    }
+    /*
+     * performs searches from a query
+     * 
+     */
+public static void performSearch(Scanner keyboard,AVLTree knowledgebase){
+    //check if knowledge base is loaded
+    if(knowledgebase == null)
+    {
+        System.out.println("load knowledge first");
+        return;
+    }
+    System.out.println("Enter the query file: ");
+    String fileName = keyboard.nextLine();
+    try{
+        File file = new File(fileName);
+        Scanner scan = new Scanner(file);
+        while(scan.hasNextLine()){
+            String line = scan.nextLine().trim();
+
+            //Reset counters before each search
+            knowledgebase.resetCounters();
+            //create a search statement
+            Statement searchStatement = new Statement(line, "", 0);
+BinaryTreeNode<Statement> result = knowledgebase.find(searchStatement);
+if(result == null){
+    System.err.println("Term not found: "+ line);
+}else{
+    Statement foundStatement = result.data;
+    System.out.println(line + ":"+foundStatement.getSentence()+ " (Confidence: " + foundStatement.getConfidenceScore() +")");
+    System.out.println("Search comparisons: "+knowledgebase.getSearchCount());
+}
+        }
+        scan.close();
+
+    }catch(FileNotFoundException e){
+        System.out.println("File not found: "+ fileName);
+    }
+
     }
 }
+
+         

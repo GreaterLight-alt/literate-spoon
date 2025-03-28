@@ -1,7 +1,8 @@
 import java.util.Scanner;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileWriter; 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList ;
 import java.util.Collections;
 
@@ -63,7 +64,7 @@ public class Experiment{
               }
             }
                 
-         System.out.println("Knowledge base loade successfully.Total entries"+ knowledgebase.size());
+         System.out.println("Knowledge base loaded successfully.Total entries: "+ knowledgebase.size());
           }catch(NumberFormatException e)  {
             System.out.println("Error parsing confidence score in knowledge base");
             throw e;
@@ -87,43 +88,60 @@ public class Experiment{
            try{
            FileWriter form = new FileWriter("insertCount.txt",true);
            form.write("Number of comparisons done when n is " + size + "\n");
-           for(int i = 0; i < Math.min(size, knowledgebase.size()); i++) {
-              knowledgebaseTree.resetCounters();
-              knowledgebaseTree.insert(knowledgebase.get(i));
-              int insertComparisons = knowledgebaseTree.getInsertCount();
-              form.write(i + " " + insertComparisons+ "\n");
-              insertCount.add(insertComparisons);
-              experimentCount += insertComparisons;
-        
-        }
-        form.write("Total comparisons: " + experimentCount);
-        form.write("The best case(min comparisons): " + Collections.min(insertCount) + "\n");
-        form.write("The worst case(max comparions): " + Collections.max(insertCount) + "\n");
-        form.write("The average case: " + calculateAverage(insertCount)/(double) size + "\n");
+         for (int run = 0 ;run < 10 ;run++){// run 10 times for each size
+          knowledgebaseTree.resetCounters();
+          insertCount.clear();
+          experimentCount = 0;
+         // perform insertions and track comparisons
+          for(int i = 0; i < Math.min(size, knowledgebase.size()); i++) {
+            knowledgebaseTree.resetCounters();
+            knowledgebaseTree.insert(knowledgebase.get(i));
+
+            int insertComparisons = knowledgebaseTree.getInsertCount();
+            insertCount.add(insertComparisons);
+            experimentCount+= insertComparisons;
+            form.write((i + 1)+ " " + insertComparisons + "\n");
+          }
+
+          
+          form.write("Total comparisons: " + calculateSum(insertCount) + "\n");
+          form.write("The best case(min comparisons): " + Collections.min(insertCount) + "\n");
+          form.write("The worst case(max comparions): " + Collections.max(insertCount) + "\n");
+          form.write("The average case: " + calculateAverage(insertCount)/(double) size + "\n");
+          saveToCSV("experimentResults.csv", insertCount, new ArrayList<>(), size, "GenericsKB-queries.txt");
+         }
+      
+
         form.close(); 
+  
         //perform search experiment on created tree
         searchExperiment(knowledgebaseTree,"GenericsKB-queries.txt",size);
-        }
         
-        catch(Exception e) {
+        
+      }catch(Exception e) {
           System.out.println("An error ocurred during experinment" + e.getMessage());
         }
+      }
         
-        }
       /**
       * This methods is counts the number of search comparisons that are done each time when adding a file
       * @param tree This is the same tree that was used in the insertExperiment that is used here
       * @param File This is the filename of the queries that are going to be searched in the file
       */ 
       public static void searchExperiment(AVLTree  tree, String queryFile, int size) {
-        searchCount = new ArrayList<Integer> ();
+        searchCount = new ArrayList<Integer>();
         experimentSearchCount= 0;
       
       
         try{
            FileWriter form = new FileWriter("searchCount.txt",true);
            
-           form.write("Number of comparisons done when searching a sample of size n:" + size);
+           form.write("Number of comparisons done when searching a sample of size n:" + size + "\n");
+           for(int run = 0 ; run < 10;run++){
+            searchCount.clear();// clear each search run before each count
+            experimentSearchCount = 0;
+
+           
            try (Scanner scan = new Scanner(new File(queryFile))) {
             
                int count = 0;
@@ -136,36 +154,63 @@ public class Experiment{
                   form.write(count + " " + searchComparisons + "\n");
                   searchCount.add(searchComparisons);
                   experimentSearchCount += searchComparisons;
+                  form.write((count+1) + " " + searchComparisons + "\n");
                   count++;
                }
-                 
+              
                form.write("Total search comparisons " + experimentSearchCount + "\n");
                form.write("The best case: " + Collections.min(searchCount) + "\n");
                form.write("The worst case: " + Collections.max(searchCount) + "\n");
                form.write("The average case: " + calculateAverage(searchCount) / (double) size + "\n");
-               form.close();
+             saveToCSV("experimentResults.csv", new ArrayList<>(), searchCount, size, queryFile);  
            }
+          }
+          form.close();
                       
-                        catch (Exception FileNotFoundException) {
-                       System.out.println("File Not Found" +queryFile);
-                      }
-                   }
-                  catch(Exception e) {
-          System.out.println("An error ocurred.");}
+            } catch (FileNotFoundException e) {
+                           System.out.println("File Not Found" +queryFile);
+            } catch (Exception e) {
+              System.out.println("An error occurred during search experiment: "+ e.getMessage());
+            }
         }
-      
-        
-
-      
-      
+    
         /*
          * calculate the total of a list of integers
          */
-        public static int calculateAverage(ArrayList<Integer> list) {
+        public static int calculateSum(ArrayList<Integer> list) {
             int total = 0;
             for (int element : list) {
                 total += element;
             }
             return total;
         }
-}
+
+        /*
+         * calculate the average of a list of integers
+         */
+        public static double calculateAverage(ArrayList<Integer> list) {
+            int total = calculateSum(list);
+            return (double)total/ list.size();
+        }
+        /*
+         * write my experiments into a csv file
+         */
+        public static void saveToCSV(String filename, ArrayList<Integer> insertData, ArrayList<Integer> SearchData, int size, String fileName){
+                  try(FileWriter writer = new FileWriter(filename, true)){
+                    File file = new File(fileName);
+                    if(file.length() == 0 && insertData.size() > 0){
+                      writer.write("Sample Size, Insert Run, Insert Comparisons, Search Run, Search Comparisons\n");
+                    }
+                    // save the insert results
+                  for( int i = 0 ; i < Math.min(insertData.size(), SearchData.size());i++){
+                
+                    writer.write(size+ ","+ (i+1)+","+insertData.get(i)+","+(i+1)+ "," + SearchData.get(i)+ "\n");
+          }
+
+          }catch (IOException e){
+            System.out.println("Error writing to CSV: "+ e.getMessage());
+          }
+        }
+      }
+      
+

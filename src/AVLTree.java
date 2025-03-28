@@ -164,6 +164,7 @@ public class AVLTree
      */
    public BinaryTreeNode<Statement> find ( Statement d, BinaryTreeNode<Statement> node )
    {//
+    
 if (node == null){
    return null;
 

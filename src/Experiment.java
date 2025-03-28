@@ -151,10 +151,10 @@ public class Experiment{
                   Statement searchStatement = new Statement(line, "", 0.0);
                   tree.find(searchStatement);
                   int searchComparisons = tree.getSearchCount();
-                  form.write(count + " " + searchComparisons + "\n");
+                  form.write(searchComparisons + "\n");
                   searchCount.add(searchComparisons);
                   experimentSearchCount += searchComparisons;
-                  form.write((count+1) + " " + searchComparisons + "\n");
+                  
                   count++;
                }
               
